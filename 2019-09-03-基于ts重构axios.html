@@ -96,7 +96,7 @@
 <meta property="og:site_name" content="赖同学">
 <meta property="og:description" content="基于ts重构axiosustbhuangyi 老师的 基于TypeScript从零重构axios学习记录。 知识点 TypeScript 常用语法： 基础类型、函数、变量声明、接口、类、泛型、类型推新、高级类型 axios js库： 项目脚手架、基础功能实现、异常情况处理、接口扩展、拦截器实现、配置化实现、取消功能实现、其他功能实现等等 主要工具：Jest、TSLint、Commitizen、Pr">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-11T09:07:38.413Z">
+<meta property="og:updated_time" content="2019-09-18T07:13:03.600Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于ts重构axios">
 <meta name="twitter:description" content="基于ts重构axiosustbhuangyi 老师的 基于TypeScript从零重构axios学习记录。 知识点 TypeScript 常用语法： 基础类型、函数、变量声明、接口、类、泛型、类型推新、高级类型 axios js库： 项目脚手架、基础功能实现、异常情况处理、接口扩展、拦截器实现、配置化实现、取消功能实现、其他功能实现等等 主要工具：Jest、TSLint、Commitizen、Pr">
@@ -364,8 +364,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-09-11T17:07:38+08:00">
-                2019-09-11
+              <time title="更新于" itemprop="dateModified" datetime="2019-09-18T15:13:03+08:00">
+                2019-09-18
               </time>
             
           </span>
@@ -425,7 +425,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,140
+                  1,146
                 </span>
               
 
@@ -493,6 +493,7 @@
 <p>修改 xhr,返回一个 Promise</p>
 <p><strong>xhr.ts</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import &#123; AxiosRequestConfig, AxiosPromise, AxiosResponse &#125; from &apos;./types&apos;</span><br><span class="line">import &#123; parseHeaders &#125; from &apos;./helpers/headers&apos;</span><br><span class="line"></span><br><span class="line">export default function xhr(config: AxiosRequestConfig): AxiosPromise &#123;</span><br><span class="line">  return new Promise(resolve =&gt; &#123;</span><br><span class="line">    const &#123; data = null, url, method = &apos;get&apos;, headers, responseType &#125; = config</span><br><span class="line">    const request = new XMLHttpRequest()</span><br><span class="line">    if (responseType) &#123;</span><br><span class="line">      request.responseType = responseType</span><br><span class="line">    &#125;</span><br><span class="line">    // method,url,async</span><br><span class="line">    request.open(method.toUpperCase(), url, true)</span><br><span class="line"></span><br><span class="line">    request.onreadystatechange = function handleLoad() &#123;</span><br><span class="line">      if (request.readyState !== 4) &#123;</span><br><span class="line">        return</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      const responseHeaders = parseHeaders(request.getAllResponseHeaders())</span><br><span class="line">      const responseData = responseType &amp;&amp; responseType !== &apos;text&apos; ? request.response : request.responseText</span><br><span class="line">      const response: AxiosResponse = &#123;</span><br><span class="line">        data: responseData,</span><br><span class="line">        status: request.status,</span><br><span class="line">        statusText: request.statusText,</span><br><span class="line">        headers: responseHeaders,</span><br><span class="line">        config,</span><br><span class="line">        request</span><br><span class="line">      &#125;</span><br><span class="line">      resolve(response)</span><br><span class="line">    &#125;</span><br><span class="line">    Object.keys(headers).forEach(name =&gt; &#123;</span><br><span class="line">      if (data === null &amp;&amp; name.toLowerCase() === &apos;content-type&apos;) &#123;</span><br><span class="line">        delete headers[name]</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        request.setRequestHeader(name, headers[name])</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    request.send(data)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/LbhFront-end/ts-axios">具体代码地址</a></p>
 
       
     </div>
