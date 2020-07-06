@@ -96,7 +96,7 @@
 <meta property="og:site_name" content="赖同学">
 <meta property="og:description" content="NodeJS模块与文件require 的加载机制模块的分类系统模块  C/C++模块，也叫build-in内建模块，一般用于native模块嗲用，在require出去 native模块，在开发中使用的Node.js 的 http/buffer/fs等，底层也是调用的内建模块（C/C++）  第三方模块： 非Node.js自带的模块被称为第三方模块，会分成路径形式的文件模块（以.、..、/开头的）和">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-07-06T01:41:55.810Z">
+<meta property="og:updated_time" content="2020-07-06T03:18:02.596Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NodeJs回顾">
 <meta name="twitter:description" content="NodeJS模块与文件require 的加载机制模块的分类系统模块  C/C++模块，也叫build-in内建模块，一般用于native模块嗲用，在require出去 native模块，在开发中使用的Node.js 的 http/buffer/fs等，底层也是调用的内建模块（C/C++）  第三方模块： 非Node.js自带的模块被称为第三方模块，会分成路径形式的文件模块（以.、..、/开头的）和">
@@ -364,7 +364,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-07-06T09:41:55+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2020-07-06T11:18:02+08:00">
                 2020-07-06
               </time>
             
@@ -425,7 +425,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  31,069
+                  31,046
                 </span>
               
 
@@ -1469,7 +1469,6 @@
 <p>前端渲染时间，避免不同浏览器渲染快慢差异差异造成明显的时间不同步，可以在服务器返回当前时间和本地签单的时间的差值得出</p>
 <p>获得服务器时间后，前端进入倒计时计算和计时器显示，要考虑js代码和线程阻塞造成计时器延时问题，思路是通过引入计数器，判断计时器延迟执行的时间来调整，尽量让误差缩小，不同浏览器不同时间段打开页面倒计时误差可控制在1s以内</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 线程占用</span></span><br><span class="line">setInterval(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(j++ <span class="xml"><span class="tag">&lt; <span class="attr">100000000</span>);</span></span></span><br><span class="line"><span class="xml">&#125;,0)</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">// 倒计时</span></span><br><span class="line"><span class="xml">let interval = 1000,</span></span><br><span class="line"><span class="xml">    ms = 50000, //从服务器和活动开始时间计算出的时间差，测试用50000ms</span></span><br><span class="line"><span class="xml">    count=0,</span></span><br><span class="line"><span class="xml">    startTime = new Date().getTime(),</span></span><br><span class="line"><span class="xml">    timeCounter = null;</span></span><br><span class="line"><span class="xml">if(ms &gt;=0)&#123;</span></span><br><span class="line"><span class="xml">    timeCounter = setTimeout(countDownStart,interval)</span></span><br><span class="line"><span class="xml">&#125;</span></span><br><span class="line"><span class="xml">function countDownStart()&#123;</span></span><br><span class="line"><span class="xml">    count++;</span></span><br><span class="line"><span class="xml">    const offset = new Date().getTime() - (startTime+count*interval);</span></span><br><span class="line"><span class="xml">    let nextTime = interval -offset;</span></span><br><span class="line"><span class="xml">    const daytohour = 0;</span></span><br><span class="line"><span class="xml">    if(nextTime <span class="tag">&lt; <span class="attr">0</span>)&#123;</span></span></span><br><span class="line"><span class="xml">        nextTime = 0;</span></span><br><span class="line"><span class="xml">    &#125;</span></span><br><span class="line"><span class="xml">    ms-=interval;</span></span><br><span class="line"><span class="xml">    console.log(`误差：$&#123;offset&#125;ms,下一次执行：$&#123;nextTime&#125;ms后，离活动结束还有：$&#123;ms&#125;ms`)</span></span><br><span class="line"><span class="xml">    </span></span><br><span class="line"><span class="xml">    if(ms <span class="tag">&lt; <span class="attr">0</span>)&#123;</span></span></span><br><span class="line"><span class="xml">        clearTimer(timeCount)</span></span><br><span class="line"><span class="xml">    &#125;else&#123;</span></span><br><span class="line"><span class="xml">        timeCounter = setTimeout(countDownStart,nextTime),</span></span><br><span class="line"><span class="xml">    &#125;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Foo.getName(); // </span><br><span class="line">getName(); // </span><br><span class="line">Foo().getName(); // </span><br><span class="line">getName(); // </span><br><span class="line">new Foo.getName(); // </span><br><span class="line">new Foo().getName(); // </span><br><span class="line">new new Foo().getName(); //</span><br></pre></td></tr></table></figure>
       
     </div>
     
